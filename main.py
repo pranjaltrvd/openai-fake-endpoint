@@ -63,9 +63,10 @@ def data_generator():
 @app.post("/v1/chat/completions")
 @app.post("/openai/deployments/{model:path}/chat/completions")  # azure compatible endpoint
 async def completion(request: Request):
-    random_sleep = random.randint(5, 10)
-    print(f"additional random sleep for {random_sleep} seconds")
-    await asyncio.sleep(random_sleep)
+    _time_to_sleep = os.getenv("TIME_TO_SLEEP", None)
+    if _time_to_sleep is not None:
+        print("sleeping for " + _time_to_sleep)
+        await asyncio.sleep(float(_time_to_sleep))
 
     data = await request.json()
 
