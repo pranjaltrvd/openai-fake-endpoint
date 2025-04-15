@@ -78,6 +78,7 @@ async def completion(request: Request):
         print("sleeping for " + str(sleep_time) + " seconds")
         await asyncio.sleep(sleep_time)
     if data.get("stream") == True:
+        print(f"======= streaming mode response {data_generator()}")
         return StreamingResponse(
             content=data_generator(),
             media_type="text/event-stream",
@@ -108,6 +109,7 @@ async def completion(request: Request):
             ],
             "usage": {"prompt_tokens": 9, "completion_tokens": 12, "total_tokens": 21},
         }
+        print(f"======= non-streaming mode response {response}")
         return response
 
 
