@@ -204,8 +204,8 @@ async def completion(request: Request, model: str = None, authorization: str = H
             ],
             "usage": {
                 "prompt_tokens": random.randint(10, 50),
-                "completion_tokens": len(content.split()),
-                "total_tokens": random.randint(10, 50) + len(content.split())
+                "completion_tokens": 10,
+                "total_tokens": 20
             },
         }
         print(f"Non-streaming response for {requested_model}")
