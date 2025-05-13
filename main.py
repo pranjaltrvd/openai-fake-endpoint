@@ -182,6 +182,34 @@ def streaming_data_generator(content):
 async def completion(request: Request, model: str = None, authorization: str = Header(default=None)):
     data = await request.json()
     requested_model = data.get("model") or model or "gpt-3.5-turbo"
+
+    if(requested_model == "no-latency-model"):
+        response_id = uuid.uuid4().hex
+        response = {
+            "id": f"chatcmpl-{response_id}",
+            "object": "chat.completion",
+            "created": int(time.time()),
+            "model": requested_model,
+            "system_fingerprint": "fp_" + uuid.uuid4().hex[:12],
+            "choices": [
+                {
+                    "index": 0,
+                    "message": {
+                        "role": "assistant",
+                        "content": "Hello, how are you?",
+                    },
+                    "logprobs": None,
+                    "finish_reason": "stop",
+                }
+            ],
+            "usage": {
+                "prompt_tokens": random.randint(10, 50),
+                "completion_tokens": len(content.split()),
+                "total_tokens": random.randint(10, 50) + len(content.split())
+            },
+        }
+        print(f"Non-streaming response for {requested_model}")
+        return response
     
     if should_return_401(requested_model):
         print(f"Returning 401 error for model {requested_model} - current time: {datetime.now().strftime('%H:%M')}")
